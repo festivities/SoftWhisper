@@ -32,18 +32,7 @@ def export_transcription(app):
         return
 
     if app.srt_var.get():
-        app.debug_print("Exporting as SRT")
-        # If diarization is enabled, app.current_text already contains the merged SRT content.
-        if hasattr(app, 'diarization_option') and app.diarization_option.is_enabled():
-            export_content = app.current_text
-        else:
-            from subtitles import save_whisper_as_srt
-            # In this branch, save_whisper_as_srt is expected to return the SRT content.
-            export_content = save_whisper_as_srt(
-                app.current_text,  # raw Whisper output
-                app.file_path,
-                return_content=True  # This flag (which you'll need to add) makes the function return the content instead of saving
-            )
+        app.debug_print("Exporting as SRT (.srt)")
         initial_filename = os.path.splitext(os.path.basename(app.file_path))[0] + '.srt'
         initial_dir = os.path.dirname(app.file_path)
         save_path = filedialog.asksaveasfilename(
@@ -57,7 +46,7 @@ def export_transcription(app):
         if save_path:
             try:
                 with open(save_path, 'w', encoding='utf-8') as out_f:
-                    out_f.write(export_content)
+                    out_f.write(app.current_text)
                 app.update_status(f"SRT file saved to {save_path}", "green")
             except Exception as e:
                 msg = f"Error saving SRT file: {str(e)}"
