@@ -42,8 +42,6 @@ def export_transcription(app):
             export_content = save_whisper_as_srt(
                 app.current_text,  # raw Whisper output
                 app.file_path,
-                app.root,
-                app.update_status,
                 return_content=True  # This flag (which you'll need to add) makes the function return the content instead of saving
             )
         initial_filename = os.path.splitext(os.path.basename(app.file_path))[0] + '.srt'

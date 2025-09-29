@@ -36,13 +36,27 @@ def whisper_to_srt(whisper_output):
     
     return "\n".join(srt_parts)
 
-def save_whisper_as_srt(whisper_output, original_file_path, parent_window=None, status_callback=None):
-    """Save Whisper output as SRT with minimal conversion."""
-    if not whisper_output or not original_file_path:
+def save_whisper_as_srt(whisper_output, original_file_path, parent_window=None, status_callback=None, return_content=False):
+    """
+    Save Whisper output as SRT.
+    If return_content is True, returns the SRT content as a string.
+    Otherwise, prompts the user to save the file and returns True/False.
+    """
+    if not whisper_output:
         if status_callback:
-            status_callback("No transcription data available", "red")
-        return False
-    
+            status_callback("No transcription data available to convert to SRT.", "red")
+        return "" if return_content else False
+
+    srt_content = whisper_to_srt(whisper_output)
+
+    if return_content:
+        return srt_content
+
+    if not original_file_path:
+        if status_callback:
+            status_callback("Original file path is missing, cannot suggest a save name.", "red")
+        original_file_path = "transcription.txt"
+
     # Prepare file dialog
     filetypes = [('SubRip Subtitle', '*.srt')]
     initial_filename = os.path.splitext(os.path.basename(original_file_path))[0] + '.srt'
@@ -59,7 +73,6 @@ def save_whisper_as_srt(whisper_output, original_file_path, parent_window=None, 
     
     if save_path:
         try:
-            srt_content = whisper_to_srt(whisper_output)
             with open(save_path, 'w', encoding='utf-8') as srt_file:
                 srt_file.write(srt_content)
             if status_callback:
