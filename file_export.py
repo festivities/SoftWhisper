@@ -46,7 +46,7 @@ def export_transcription(app):
         if save_path:
             try:
                 with open(save_path, 'w', encoding='utf-8') as out_f:
-                    out_f.write(export_content)
+                    out_f.write(app.current_text)
                 app.update_status(f"SRT file saved to {save_path}", "green")
             except Exception as e:
                 msg = f"Error saving SRT file: {str(e)}"
