@@ -32,7 +32,7 @@ def export_transcription(app):
         return
 
     if app.srt_var.get():
-        app.debug_print("Exporting as SRT (.srt)")
+        app.debug_print("Exporting as SRT")
         initial_filename = os.path.splitext(os.path.basename(app.file_path))[0] + '.srt'
         initial_dir = os.path.dirname(app.file_path)
         save_path = filedialog.asksaveasfilename(
@@ -46,7 +46,7 @@ def export_transcription(app):
         if save_path:
             try:
                 with open(save_path, 'w', encoding='utf-8') as out_f:
-                    out_f.write(app.current_text)
+                    out_f.write(export_content)
                 app.update_status(f"SRT file saved to {save_path}", "green")
             except Exception as e:
                 msg = f"Error saving SRT file: {str(e)}"
